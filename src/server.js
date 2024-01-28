@@ -8,12 +8,11 @@
 import express from 'express'
 import { CONNECT_DB, GET_DB, CLOSE_DB } from '~/config/mongodb'
 import exitHook from 'async-exit-hook'
+import { env } from './config/environment'
 
 const STATR_SERVER = () => {
   const app = express()
 
-  const hostname = 'localhost'
-  const port = 8017
 
   app.get('/', /*async*/ (req, res) => {
     // console.log(await GET_DB().listCollections().toArray())
@@ -21,13 +20,15 @@ const STATR_SERVER = () => {
     res.end('<h1>Hello World!</h1><hr>')
   })
 
-  app.listen(port, hostname, () => {
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
     // eslint-disable-next-line no-console
-    console.log(`Hello Donlangdang, I am running at http://${hostname}:${port}/`)
+    console.log(`Hello Donlangdang, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`)
   })
   // thực hiện các tác vụ cleanup trước khi đóng server
   exitHook(() => {
+    console.log('4. server is shutting down...')
     CLOSE_DB()
+    console.log('5. Disconnected from MongoDB Cloud Atlas')
   })
 }
 // chỉ khi kết nối với database thành công thì mới start server back-end lên.
