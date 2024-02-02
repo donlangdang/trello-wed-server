@@ -23,7 +23,7 @@ const createNew = async (reqBody) => {
 
     // lấy bản ghi board sau khi gọi (tuy thuộc dự án)
     const getNewBoard = await boardModel.findOneById(createdBoard.insertedId)
-    console.log(getNewBoard)
+    // console.log(getNewBoard)
     // làm thêm các xử lí logic khác với các collection khác tùy đặc thù dự án...vv
     // bắn Email, Notification về cho admin khi có 1 board mới đc tạo... v v
     // trả kết quả về trong services luôn phải có return
