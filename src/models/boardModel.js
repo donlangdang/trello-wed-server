@@ -4,6 +4,7 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 import Joi, { date } from 'joi'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 // Define collection (Name & Schema)
 
@@ -13,7 +14,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   slug: Joi.string().required().min(3).max().trim().strict(),
   description: Joi.string().required().min(3).max(256).trim().strict(),
 
-  columnOrderIds: Joi.array().items(Joi.string()).default([]),
+  columnOrderIds: Joi.array().items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)).default([]),
 
   createdAt: Joi.date().timestamp('javascript').default(date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
