@@ -7,6 +7,8 @@
 
 import { slugify } from '~/utils/formatters'
 import { boardModel } from '~/models/boardModel'
+import ApiError from '~/utils/ApiError'
+import { StatusCodes } from 'http-status-codes'
 
 // service thường dùng để xử lí logic các hàm các thứ như kiểu truy xuất dữ liệu trong database rồi chuyển sang cho controller để đẩy qua route chứ service ko chứa route hay điều hướng hoặc những gì tương tự.
 const createNew = async (reqBody) => {
@@ -31,7 +33,18 @@ const createNew = async (reqBody) => {
   } catch (error) { throw error }
 
 }
+const getDetails = async (boardId) => {
+  try {
+    const board = await boardModel.getDetails(boardId)
+    if (!board) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+    }
+    return board
+  } catch (error) { throw error }
+
+}
 
 export const boardService = {
-  createNew
+  createNew,
+  getDetails
 }
