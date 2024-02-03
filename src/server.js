@@ -6,6 +6,8 @@
  */
 
 import express from 'express'
+import cors from 'cors'
+import { corsOptions } from '~/config/cors'
 import { CONNECT_DB, GET_DB, CLOSE_DB } from '~/config/mongodb'
 import exitHook from 'async-exit-hook'
 import { env } from '~/config/environment'
@@ -14,6 +16,8 @@ import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
 
 const STATR_SERVER = () => {
   const app = express()
+  // xử lí cors
+  app.use(cors(corsOptions))
 
   // enable req.body json data
   app.use(express.json())
