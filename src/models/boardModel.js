@@ -8,7 +8,7 @@ import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { BOARD_TYPE } from '~/utils/constants'
-import { columnModel } from '~/models/collumnModel'
+import { columnModel } from '~/models/columnModel'
 import { cardModel } from '~/models/cardModel'
 
 // Define collection (Name & Schema)
@@ -34,7 +34,7 @@ const validateBeforeCreate = async (data) => {
 const createNew = async (data) => {
   try {
     const validata = await validateBeforeCreate(data)
-    console.log('validata: ', validata)
+    // console.log('validata: ', validata)
     const createdBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).insertOne(validata)
     return createdBoard
   } catch (error) {
@@ -78,12 +78,25 @@ const getDetails = async (id) => {
   } catch (error) { throw new Error(error) }
 }
 
+// nhiệm vụ của func nay là push 1 giá trị columnId vào cuối nảng columnIds
+const pushColumnOrderIds = async (column) => {
+  try {
+    const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(column.boardId) },
+      { $push: { columnOrderIds: new ObjectId(column._id) } },
+      { returnDocument: 'after' }
+    )
+    return result.value
+  } catch (error) { throw new Error(error)}
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
   createNew,
   findOneById,
-  getDetails
+  getDetails,
+  pushColumnOrderIds
 }
 
 // boardId: 65c0fc7917e1d2df63ce8fe9
