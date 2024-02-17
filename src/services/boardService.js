@@ -10,6 +10,8 @@ import { boardModel } from '~/models/boardModel'
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
+import { columnModel } from '~/models/columnModel'
+import { cardModel } from '~/models/cardModel'
 
 // service thường dùng để xử lí logic các hàm các thứ như kiểu truy xuất dữ liệu trong database rồi chuyển sang cho controller để đẩy qua route chứ service ko chứa route hay điều hướng hoặc những gì tương tự.
 const createNew = async (reqBody) => {
@@ -70,8 +72,31 @@ const update = async (boardId, reqBody) => {
 
 }
 
+const moveCardToDifferentColumn = async (reqBody) => {
+  try {
+    // b1: cập nhật mảng cardOrderIds của column ban đầu chứa nó (xóa _id của card ra khỏi mảng)
+    await columnModel.update(reqBody.prevColumnId, {
+      cardOrderIds: reqBody.prevCardOrderIds,
+      updateAt: Date.now()
+    })
+    // b2: cập nhật mảng cardOrderIds của column tiếp theo(thêm _id của card vào mảng)
+    await columnModel.update(reqBody.nextColumnId, {
+      cardOrderIds: reqBody.nextCardOrderIds,
+      updateAt: Date.now()
+    })
+    // b3: cập nhật lại trường columnId mới của cái card đã kéo
+    await cardModel.update(reqBody.currentCardId, {
+      columnId: reqBody.nextColumnId
+    })
+
+    return { updateResult: 'Successfully!' }
+  } catch (error) { throw error }
+
+}
+
 export const boardService = {
   createNew,
   getDetails,
-  update
+  update,
+  moveCardToDifferentColumn
 }
