@@ -28,10 +28,20 @@ const STATR_SERVER = () => {
   // middlewares xử lĩ lỗi tập trung
   app.use(errorHandlingMiddleware)
 
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Hello Donlangdang, I am running at http://${env.APP_HOST}:${env.APP_PORT}/`)
-  })
+  if (env.BUILD_MODE === 'production') {
+    // môi trường production render.com
+    app.listen(process.env.PORT, () => {
+      // eslint-disable-next-line no-console
+      console.log(`3. production: Hello Donlangdang, I am running at Port: ${process.env.PORT}`)
+    })
+  } else {
+    // moi truong local dev
+    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+      // eslint-disable-next-line no-console
+      console.log(`3. local Dev: Hello Donlangdang, I am running at http://${env.LOCAL_DEV_APP_HOST}:${env.LOCAL_DEV_APP_PORT}/`)
+    })
+  }
+
   // thực hiện các tác vụ cleanup trước khi đóng server
   exitHook(() => {
     console.log('4. server is shutting down...')
