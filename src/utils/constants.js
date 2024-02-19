@@ -7,7 +7,7 @@
 export const WHITELIST_DOMAINS = [
   // 'http://localhost:5173' // không cần localhost nữa vì ở file config/cors đã luôn cho phép môi trường dev đi qua
   // (env.BUILD_MODE === 'dev')
-  'https://trello-wed-alpha.vercel.app/'
+  'https://trello-wed-alpha.vercel.app'
   //  sau này deploy lên domain nào khác thì gắn vào đây
 ]
 
